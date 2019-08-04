@@ -2,18 +2,45 @@
 import LunarCalendar 1.0
 
 GridView {
-    id: calendarGridView
-    signal selectDateSig(variant dateData)
-    property color bgColor: "white"
+    id: root
 
-    function dpW(w) { return (width/480)*w }
-    function dpH(h) { return (height/853)*h }
+    /**
+     * @brief 在日历中的有效日期上单击鼠标时发出。
+     * @param date: 鼠标被单击的日期。
+     */
+    signal clicked(variant date)
+
+    /**
+     * @brief 重定位到当天日期
+     */
+    function today() {
+        var today = new Date()
+        setDate(today)
+    }
+
+    /**
+     * @brief 获取日历当前日期
+     */
+    function getDate() {
+        return privateVar.getYMD(root.currentIndex)
+    }
+
+    /**
+     * @brief 设置日历的日期
+     */
+    function setDate(date) {
+        privateVar.monthAndYearNumber = [date.getMonth() + 1, date.getFullYear()]
+        root.currentIndex = privateVar.getIndexByDate(date.getDate(), date.getMonth()+1, date.getFullYear())
+
+        /* 更新日期任务列表 */
+        __setNoteDates(privateVar.noteDates)
+    }
 
     width: 600; height: 480
     cellHeight: (2*height)/13; cellWidth: width/7
     clip: true
     interactive: false
-    header:weekStatus
+    header: weekStatus
     model: 42
     delegate: dateGridDelegate
 
@@ -21,13 +48,12 @@ GridView {
         id: weekStatus
         Item {
             id: weekItem
-            width: calendarGridView.width; height: calendarGridView.height/13
+            width: root.width; height: root.height/13
             Repeater {
                 model: ["日", "一", "二", "三", "四", "五", "六"]
-                Rectangle {
+                Item {
                     x: index * width
-                    width: calendarGridView.cellWidth; height: weekItem.height
-                    color: bgColor
+                    width: root.cellWidth; height: weekItem.height
 
                     Text {
                         anchors.centerIn: parent
@@ -44,8 +70,8 @@ GridView {
         id: dateGridDelegate
         Rectangle {
             id: cellContent
-            width: calendarGridView.cellWidth; height: calendarGridView.cellHeight
-            color: privateVar.getCellBgColor(calendarGridView.currentIndex === index)
+            width: root.cellWidth; height: root.cellHeight
+            color: privateVar.getCellBgColor(root.currentIndex === index)
 
             Column {
                 anchors.centerIn: parent
@@ -69,7 +95,7 @@ GridView {
                         color: privateVar.getDateColor(index,
                                                        privateVar.monthAndYearNumber[1],
                                                        privateVar.monthAndYearNumber[0],
-                                                       calendarGridView.currentIndex === index ||
+                                                       root.currentIndex === index ||
                                                        isFestival)
                     }
                 }
@@ -96,10 +122,10 @@ GridView {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    calendarGridView.currentIndex = index
+                    root.currentIndex = index
                     var selectDate = getDate()
                     setDate(selectDate)
-                    selectDateSig(selectDate)
+                    root.clicked(selectDate)
                 }
             }
         }
@@ -240,7 +266,7 @@ GridView {
         }
 
         function isCurMonth() {
-            var day = calendarGridView.currentIndex - privateVar.getWeek(sYear, sMonth, 1) + 1
+            var day = root.currentIndex - privateVar.getWeek(sYear, sMonth, 1) + 1
 
             if (day < 1) {
                 return -1
@@ -301,28 +327,17 @@ GridView {
 
     Component.onCompleted: {
         today()
+        __setNoteDates([new Date])
     }
 
-    function today() {
-        var today = new Date()
-        setDate(today)
-    }
+    function dpW(w) { return (width/480)*w }
+    function dpH(h) { return (height/853)*h }
 
-    function getDate() {
-        return privateVar.getYMD(calendarGridView.currentIndex)
-    }
-
-    function setDate(date) {
-        privateVar.monthAndYearNumber = [date.getMonth() + 1, date.getFullYear()]
-        calendarGridView.currentIndex = privateVar.getIndexByDate(date.getDate(), date.getMonth()+1, date.getFullYear())
-
-        /* 更新日期任务列表 */
-        setNoteDates(privateVar.noteDates)
-    }
-
-    /* 该方法是根据输入的日期列表标记其日期是否被标记
-         * 日期列表格式 [new Date(), new Date(), new Date()] */
-    function setNoteDates(dates) {
+    /* 私有方法
+     * 该方法是根据输入的日期列表标记其日期是否被标记
+     * 日期列表格式 [new Date(), new Date(), new Date()]
+     */
+    function __setNoteDates(dates) {
         privateVar.updateCurMonthScheduleTable(dates)
     }
 }
