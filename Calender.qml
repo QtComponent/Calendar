@@ -1,5 +1,5 @@
 ﻿import QtQuick 2.6
-//import LunarCalendar 1.0
+import LunarCalendar 1.0
 
 GridView {
     id: calendarGridView
@@ -9,7 +9,7 @@ GridView {
     function dpW(w) { return (width/480)*w }
     function dpH(h) { return (height/853)*h }
 
-    width: 462; height: 324
+    width: 462 * 2; height: 324 * 2
     cellHeight: (2*height)/13; cellWidth: width/7
     clip: true
     interactive: false
@@ -58,15 +58,14 @@ GridView {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottom: parent.bottom
                         text: privateVar.getDate(index, privateVar.monthAndYearNumber[1], privateVar.monthAndYearNumber[0])
-//                        onTextChanged: {
-//                            lunarCalendar.getLunarDate(privateVar.getYMD(index))
-//                            festival.text = String(lunarCalendar.festivals[0])
-//                            isFestival = lunarCalendar.isFestival
-//                        }
+                        onTextChanged: {
+                            lunarCalendar.getLunarDate(privateVar.getYMD(index))
+                            festival.text = String(lunarCalendar.festivals[0])
+                            isFestival = lunarCalendar.isFestival
+                        }
                         font.pixelSize: dpW(25)
                         font.bold: true
-//                        property bool isFestival: lunarCalendar.isFestival
-                        property bool isFestival: false
+                        property bool isFestival: lunarCalendar.isFestival
                         color: privateVar.getDateColor(index,
                                                        privateVar.monthAndYearNumber[1],
                                                        privateVar.monthAndYearNumber[0],
@@ -296,9 +295,9 @@ GridView {
         }
     }
 
-//    LunarCalendar {
-//        id: lunarCalendar
-//    }
+    LunarCalendar {
+        id: lunarCalendar
+    }
 
     Component.onCompleted: {
         today()
@@ -327,5 +326,3 @@ GridView {
         privateVar.updateCurMonthScheduleTable(dates)
     }
 }
-
-
