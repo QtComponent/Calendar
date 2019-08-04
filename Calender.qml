@@ -9,7 +9,7 @@ GridView {
     function dpW(w) { return (width/480)*w }
     function dpH(h) { return (height/853)*h }
 
-    width: 462 * 2; height: 324 * 2
+    width: 640; height: 480
     cellHeight: (2*height)/13; cellWidth: width/7
     clip: true
     interactive: false
