@@ -1,6 +1,6 @@
 QT += core
 
-TARGET = Calenda
+TARGET = Calendar
 DEFINES += APP_NAME=\\\"'$$TARGET'\\\"
 
 equals (QT_MAJOR_VERSION, 4): QT += declarative
