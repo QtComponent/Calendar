@@ -32,3 +32,10 @@ QtQuickVersion.target = FORCE
 PRE_TARGETDEPS += FORCE
 QMAKE_EXTRA_TARGETS += QtQuickVersion
 
+msvc {
+    DEFINES += COMPILER_MSVC
+}
+
+mingw {
+    DEFINES += COMPILER_MINGW
+}
