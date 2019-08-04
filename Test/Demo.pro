@@ -1,6 +1,7 @@
 QT += core
 
-DEFINES += APP_NAME=\\\"'Calenda'\\\"
+TARGET = Calenda
+DEFINES += APP_NAME=\\\"'$$TARGET'\\\"
 
 equals (QT_MAJOR_VERSION, 4): QT += declarative
 equals (QT_MAJOR_VERSION, 5): QT += qml quick quickwidgets
