@@ -1,6 +1,12 @@
 ﻿#include "LunarCalendar.h"
 
+#ifdef COMPILER_MSVC
+#define FROMLOCAL8BIT(content) QString::fromLocal8Bit(content)
+#elif COMPILER_MINGW
 #define FROMLOCAL8BIT(content) QString(content)
+#else
+#define FROMLOCAL8BIT(content) QString(content)
+#endif
 
 /* 除夕等变化日另算 */
 const QMap<QString,QString> m_lunarFestivalMap = {
