@@ -1,7 +1,7 @@
 ﻿#include "LunarCalendar.h"
 
 #ifdef COMPILER_MSVC
-#define FROM_LOCAL_8BIT(content) QString::FROM_LOCAL_8BIT(content)
+#define FROM_LOCAL_8BIT(content) QString::fromLocal8Bit(content)
 #elif COMPILER_MINGW
 #define FROM_LOCAL_8BIT(content) QString(content)
 #else
