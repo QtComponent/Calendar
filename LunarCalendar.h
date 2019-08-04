@@ -1,4 +1,4 @@
-#ifndef LUNARCALENDAR_H
+﻿#ifndef LUNARCALENDAR_H
 #define LUNARCALENDAR_H
 
 #include <QObject>
